@@ -1,0 +1,17 @@
+ApexIQ V0.2.18 — Add Data / CSV production fix
+
+Root cause found:
+The production package loaded js/data.js, which declares the global arrays
+sales, purchases and expenses, and then the Add Data persistence script in
+index.html declared those same names again with const. Browsers reject the
+second declaration with a global lexical SyntaxError. Because the entire
+inline script block failed to parse, openAddDataModal(), CSV import, and the
+other Add Data handlers in that block were never defined.
+
+Fix:
+Removed only the three duplicate declarations from the inline persistence
+layer. The existing arrays from js/data.js are now used, preserving the
+existing V0.2.18 Add Data, Add Product, Add Sale, Add Purchase, Add Supplier,
+Add Expense, CSV import, validation, persistence, and rollback behavior.
+
+No UI redesign or V0.3 functionality was added.

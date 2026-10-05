@@ -1,0 +1,14 @@
+ApexIQ V0.2.18 — Add Data restoration
+
+The Add Data / CSV Import implementation was restored from the previously completed V0.2.17-B baseline without changing its behavior.
+
+Verified:
+- Add Data modal functions present
+- Add Product / Sale / Purchase / Supplier / Expense forms present
+- CSV import form present
+- CSV file input present
+- CSV import submit handler present
+- Existing validation, staging, rollback and local persistence code preserved
+- Tailwind CDN absent
+- JS syntax checks passed
+- Required production JS files present
