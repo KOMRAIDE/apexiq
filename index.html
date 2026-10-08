@@ -285,7 +285,7 @@
 
                     <div>
 
-                        <p class="text-sm font-medium text-green-700">
+                        <p id="dashboardCurrentDate" class="text-sm font-medium text-green-700">
                             Wednesday, 26 August 2026
                         </p>
 
@@ -474,7 +474,7 @@
 
                             </div>
 
-                            <span class="text-xs font-semibold bg-gray-100 px-3 py-2 rounded-lg">
+                            <span id="performanceChartPeriod" class="text-xs font-semibold bg-gray-100 px-3 py-2 rounded-lg">
                                 August 2026
                             </span>
 
@@ -5724,6 +5724,9 @@ window.apexIQCloudState.workspaceGeneration = Number(window.apexIQCloudState.wor
         if (typeof original !== "function") return;
         window[name] = function (event) {
             const result = original(event);
+            if (typeof window.createChart === "function") {
+                window.createChart();
+            }
             afterLocalWrite();
             return result;
         };
@@ -5793,6 +5796,30 @@ window.apexIQCloudState.workspaceGeneration = Number(window.apexIQCloudState.wor
         return canvas;
     }
 
+    function updateDashboardDateLabels() {
+        const now = new Date();
+        const dashboardDate = document.getElementById("dashboardCurrentDate");
+        const chartPeriod = document.getElementById("performanceChartPeriod");
+
+        if (dashboardDate) {
+            dashboardDate.textContent = now.toLocaleDateString("en-NG", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            });
+        }
+
+        if (chartPeriod) {
+            chartPeriod.textContent = now.toLocaleDateString("en-NG", {
+                month: "long",
+                year: "numeric"
+            });
+        }
+    }
+
+    updateDashboardDateLabels();
+
     window.createChart = function () {
         const canvas = destroyExistingChart();
         if (!canvas || typeof Chart === "undefined") return;
@@ -5832,6 +5859,7 @@ window.apexIQCloudState.workspaceGeneration = Number(window.apexIQCloudState.wor
     /* Re-render after cloud data arrives. */
     const originalInitialize = window.initializeApexIQ;
     window.initializeApexIQ = function () {
+        updateDashboardDateLabels();
         if (typeof originalInitialize === "function") originalInitialize();
         if (isMyBusiness()) {
             setTimeout(renderMyBusinessHealth, 0);
